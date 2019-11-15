@@ -9,7 +9,7 @@ setup:
 	go mod init src/top_domains
 
 build:
-	go build src/top_domains/*
+	go build -o bin/top_domains src/top_domains/*
 
 run: build
 	go run src/top_domains/*.go
@@ -26,8 +26,11 @@ start:
 test-ping:
 	curl localhost:3000/ping
 
-test-top_domains:
+test-top:
 	curl localhost:3000/top
+
+test-domains:
+	curl localhost:3000/domains
 
 docker-build: 
 	docker build -t top_domains .
@@ -82,3 +85,5 @@ docker-ps:
 docker-ps-ports:
 	 docker ps --all --format "table {{.Names}}\t{{.Ports}}\t"
 
+run-all:
+	docker-compose up --build

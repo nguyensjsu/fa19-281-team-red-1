@@ -17,7 +17,14 @@ import (
 
 // MongoDB Config
 // var mongodb_server = "mongodb"
-var mongodb_server = "localhost:27017"
+
+// Local
+// var mongodb_server = "localhost:27017"
+// var mongodb_database = "top_domains"
+// var mongodb_collection = "top_domains"
+
+// Docker-compose
+var mongodb_server = "mongodb:27017"
 var mongodb_database = "top_domains"
 var mongodb_collection = "top_domains"
 

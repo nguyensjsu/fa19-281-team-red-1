@@ -1,17 +1,27 @@
-version: "1"
+version: "3.5"
 services:
-  gumball:
-    image: kchuang7/top_domains:top_domains-v1.0
+  top_domains:
+    image: top_domains:v1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "9000:3000"
+      - "3000:3000"
     networks:
       - webnet
-  rabbitmq:
-    image: rabbitmq:3-management
-    networks:
-      - webnet
+    depends_on:
+      - mongodb
+    tty: true
+    stdin_open: true
+    restart: always
+    command: /wait-for-it.sh -t 30 mongodb:27017 -- /app/bin/top_domains
   mongodb:
+    restart: always
     image: mongo:3.7
+    environment:
+      - MONGODB_DATABASE=top_domains
+    ports:
+      - "27017:27017"
     networks:
       - webnet
 networks:
