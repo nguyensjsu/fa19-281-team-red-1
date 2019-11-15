@@ -14,10 +14,19 @@ This Go API will take a JSON request with a url, and track the number of times a
     - `make run`
 - Docker-compose
     - `make run-all`
+- Kubernetes
+    - Important note: make sure to push your image to a repo, for `docker stack deploy` to work
+    - Create a name space: `make create-namespace`
+    - Deploy: `make stack-up-namespace`
 
 ## Tests
 - Reference [Makefile](./Makefile)
-- In the makefile, there are commands for running curL commands to test the API, after `make run-all` is run
+- In the makefile, there are commands for running curL commands to test the API, after `make run-all` or `make stack-up-namespace` is successfully ran
+    - `make test-top-5` is the probably the most important test
+    - Individual tests are also included
+
+## Kubernetes Notes
+- Create a namespace (`topdomains`), note kubernetes doesn't accept underscores in the name
 
 ## Misc.
 - **Go Modules**

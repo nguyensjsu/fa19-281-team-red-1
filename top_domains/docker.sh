@@ -3,8 +3,8 @@
 # Container
 
 ACCOUNT=""
-CONTAINER="top_domains"
-VERSION="top_domain-v1.0"
+CONTAINER="topdomains"
+VERSION="topdomains-v1.0"
 
 # Shell Variables
 

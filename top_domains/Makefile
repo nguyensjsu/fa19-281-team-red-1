@@ -70,10 +70,8 @@ test-setup:
 	-d '{ "url": "http://cbsnews.com" }' 
 	curl localhost:3000/domains
 
-
 test-top-5: test-setup
 	curl localhost:3000/top
-
 
 docker-build: 
 	docker build -t top_domains .
@@ -130,3 +128,62 @@ docker-ps-ports:
 
 run-all:
 	docker-compose up --build
+
+## Kubernetes stuff
+
+version:
+	kubectl version
+
+cluster:
+	kubectl cluster-info
+
+config:
+	kubectl config view
+
+nodes:
+	kubectl get nodes
+
+list-pods:
+	kubectl get pods
+
+list-all-pods:
+	kubectl get pods --all-namespaces
+
+list-system-pods:
+	kubectl get pods --namespace=kube-system
+
+install-dashboard:
+	kubectl create -f $(CURDIR)/infrastructure/kubernetes-dashboard.yaml
+
+run-dashboard:
+	kubectl port-forward $(pod) 8443:8443 --namespace=kube-system
+
+start-api-proxy:
+	kubectl proxy --port=8080 
+
+list-deployments:
+	kubectl get deployments
+
+describe-pod:
+	kubectl describe pod $(pod)
+
+stack-up:
+	docker stack deploy --compose-file docker-compose.yml topdomainsstack
+
+stack-services:	
+	docker stack services topdomainsstack
+
+stack-down:
+	docker stack rm topdomainsstack
+
+create-namespace:
+	kubectl create -f $(CURDIR)/infrastructure/kubernetes-namespace.yaml
+
+stack-up-namespace:
+	docker stack deploy --namespace topdomains --compose-file docker-compose.yml topdomainsstack
+
+stack-down-namespace:
+	docker stack rm --namespace topdomains topdomainsstack
+
+kube-namespace-services:
+	kubectl get services -n topdomains 
