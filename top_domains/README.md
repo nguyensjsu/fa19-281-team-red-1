@@ -10,4 +10,15 @@ This Go API will take a JSON request with a url, and track the number of times a
 
 ## How to run
 - Reference [Makefile](./Makefile)
-- `make run`
+- Local:
+    - `make run`
+- Docker-compose
+    - `make run-all`
+
+## Tests
+- Reference [Makefile](./Makefile)
+- In the makefile, there are commands for running curL commands to test the API, after `make run-all` is run
+
+## Misc.
+- **Go Modules**
+    - I utilize Go modules in `go.mod` and `go.sum` for managing packages

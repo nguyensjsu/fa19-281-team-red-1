@@ -32,6 +32,49 @@ test-top:
 test-domains:
 	curl localhost:3000/domains
 
+test-create-and-update:
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://localhost.com/4f8df838fdfhj29fi" }' 
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://localhost.com/v939dfh3jdfj93fkd" }' 
+	curl localhost:3000/domains
+
+test-setup:
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://localhost.com/" }' 
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://localhost.com/4f8df838fdfhj29fi" }' 
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://localhost.com/v939dfh3jdfj93fkd" }' 
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://nytimes.com/f9fj0f3k3fj3f0fkj" }' 
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://nytimes.com/"}' 
+	curl -X POST \
+  	http://localhost:3000/url \
+  	-H 'Content-Type: application/json' \
+	-d '{ "url": "http://cbsnews.com" }' 
+	curl localhost:3000/domains
+
+
+test-top-5: test-setup
+	curl localhost:3000/top
+
+
 docker-build: 
 	docker build -t top_domains .
 	docker images
