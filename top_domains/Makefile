@@ -8,7 +8,7 @@ clean:
 setup:
 	go mod init src/top_domains
 
-build: setup
+build:
 	go build src/top_domains/*
 
 run: build
