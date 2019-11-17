@@ -14,10 +14,11 @@ type MongoConfig struct {
 }
 
 var Config = Configuration {
-	BaseURL : "http://54.188.141.200:8080/",
+	BaseURL : "http://54.203.79.184:8080/",
 	Backend : "mongo",
 	Mongo : MongoConfig {
-		Host : "mongodb://admin:cmpe281@10.0.1.144:27017,10.0.1.174:27017,10.0.1.225:27017/admin?replicaSet=cmpe281",
+		Host : "mongodb://admin:cmpe281@primary:27017,secondary1:27017,secondary2:27017/admin?replicaSet=cmpe281",
+		//Host : "mongodb://root:0717@localhost:27017",
 		DB : "shortenURL",
 		Collection : "urls",
 		Timeout : 10,
