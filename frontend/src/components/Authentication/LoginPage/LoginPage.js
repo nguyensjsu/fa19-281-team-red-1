@@ -2,7 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { switchPage, SIGNUP_PAGE } from '../../../redux/actions'
+import { userLoginAction, switchPage, SIGNUP_PAGE } from '../../../redux/actions'
 
 import styles from '../Authentication.module.css';
 
@@ -10,6 +10,10 @@ class LoginPage extends Component {
 
     onSignupClickHandler = () => {
         this.props.switchPage(SIGNUP_PAGE)
+    }
+
+    onLoginClickHandler = () => {
+        this.props.login("test");
     }
 
     render() {
@@ -25,7 +29,7 @@ class LoginPage extends Component {
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" />
                     </Form.Group>
-                    <Button variant="success" className={styles.button}>
+                    <Button variant="success" className={styles.button} onClick={this.onLoginClickHandler}>
                         Login
                     </Button>
                     <Button variant="primary" onClick={this.onSignupClickHandler}>
@@ -39,7 +43,8 @@ class LoginPage extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        switchPage: (page) => dispatch(switchPage(page))
+        switchPage: (page) => dispatch(switchPage(page)),
+        login: (username) => dispatch(userLoginAction(username))
     };
 };
 

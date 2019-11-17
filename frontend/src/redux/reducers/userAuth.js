@@ -2,7 +2,8 @@ import * as actions from '../actions/index';
 
 const defaultState = {
     userLoggedin: false,
-    page: actions.LOGIN_PAGE
+    page: actions.LOGIN_PAGE,
+    username: null
 }
 
 const userAuth = (state = defaultState, action) => {
@@ -10,7 +11,8 @@ const userAuth = (state = defaultState, action) => {
         case actions.USER_LOGGEDIN:
             return {
                 ...state,
-                userLoggedin: action.payload.success
+                userLoggedin: action.payload.success,
+                username: action.payload.username
             }
         case actions.SWITCH_PAGE: 
             return {

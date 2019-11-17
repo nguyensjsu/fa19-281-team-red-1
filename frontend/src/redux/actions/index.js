@@ -4,11 +4,12 @@ export const LOGIN_PAGE = "LOGIN_PAGE";
 export const SIGNUP_PAGE = "SIGNUP_PAGE";
 
 
-export const userLoginAction = () => (
+export const userLoginAction = (username) => (
     {
         type: USER_LOGGEDIN,
         payload: {
-            success: true
+            success: true,
+            username
         }
     }
 )
