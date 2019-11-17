@@ -111,18 +111,22 @@ func urlHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func historyHandler(w http.ResponseWriter, req *http.Request) {
-	result := []userinfoDB{}
-	err := c.Find(nil).All(&result)
-	if err != nil {
-		fmt.Println(err) // prints 'document is nil'
+
+	username, ok := req.URL.Query()["Username"]
+    
+    if !ok || len(username[0]) < 1 {
+		formatter.JSON(w, http.StatusBadRequest, "Url Param 'Username' is missing")
+        return
 	}
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	
+	query := bson.M{"Username": username[0]}
+	var result userinfoDB
+	err := c.Find(query).One(&result)
+	if err != nil {
+		formatter.JSON(w, http.StatusNotFound, "User not found")
+		return
+	}
 	fmt.Println("Results All: ", result)
-	// w.WriteHeader(http.StatusOK)
-	// fmt.Fprintf(w, result)
-	// fmt.Println("Gumball Machine:", result)
 	formatter.JSON(w, http.StatusOK, result)
 }
 
