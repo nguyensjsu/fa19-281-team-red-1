@@ -64,7 +64,11 @@ func main() {
 }
 
 func initDB() *mgo.Collection {
-	url := "localhost:27017"
+	// Local
+	// url := "localhost:27017"
+	// Docker-compose
+	url := "mongodb:27017"
+
 	database := "user_auth"
 	collection := "userinfo"
 
