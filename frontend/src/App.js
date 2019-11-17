@@ -5,19 +5,29 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import { connect } from 'react-redux'
 
 import MyNavbar from './components/MyNavbar/MyNavbar'
-import LoginPage from './components/Authentication/LoginPage/LoginPage'
+import Authentication from './components/Authentication/Authentication'
 
-function App() {
-  return (
-    <Router>
-      <div className="App">
-        <MyNavbar></MyNavbar>
-        <LoginPage></LoginPage>
-      </div>
-    </Router>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <Router>
+        <div className="App">
+          {
+            this.props.userAuth.userLoggedin ? <MyNavbar /> : <Authentication />
+          }
+          {/* <MyNavbar></MyNavbar>
+          <LoginPage></LoginPage>
+          <SignupPage></SignupPage> */}
+        </div>
+      </Router>
+    )
+  }
 }
+const mapStateToProps = state => ({
+  userAuth: state.userLoggedin
+})
 
-export default App;
+export default connect(mapStateToProps)(App);
