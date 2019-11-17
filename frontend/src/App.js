@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import MyNavbar from './components/MyNavbar/MyNavbar'
-import LoginPage from './components/Authentication/LoginPage'
+import LoginPage from './components/Authentication/LoginPage/LoginPage'
 
 function App() {
   return (
