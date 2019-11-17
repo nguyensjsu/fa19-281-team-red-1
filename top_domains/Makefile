@@ -14,6 +14,9 @@ build:
 run: build
 	go run src/top_domains/*.go
 
+run-binary:
+	bin/top_domains
+
 format:
 	go fmt src/top_domains/*
 
@@ -97,7 +100,6 @@ mongodb-run:
 
 mongodb-run-local:
 	docker run --name mongodb -p 27017:27017 -d mongo:3.7
-
 
 docker-network:
 	docker network ls
@@ -187,3 +189,19 @@ stack-down-namespace:
 
 kube-namespace-services:
 	kubectl get services -n topdomains 
+
+## Different way to deploy with Kubernetes
+
+
+kompose-convert:
+	kompose convert -f docker-compose.yml -o infrastructure/topdomains
+
+deploy-kube:
+	kubectl apply -f ./infrastructure/topdomains --namespace=topdomains
+
+clean-kube:
+	kubectl delete deploy/mongodb --namespace=topdomains
+	kubectl delete services/mongodb services/topdomains --namespace=topdomains
+
+get-all-kube:
+	kubectl get all --namespace=topdomains

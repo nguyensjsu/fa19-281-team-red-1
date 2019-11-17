@@ -16,6 +16,6 @@ RUN go mod download
 COPY . .
 # ENV GOPATH /app
 # Build the Go app
-RUN cd /app ; go build -o /app/bin/userauth .
+RUN cd /app ; go build -o /app/bin/userauth src/user-authentication.go
 # RUN cd /app ; go install top_domains
 CMD ["/app/bin/userauth"]
