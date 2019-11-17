@@ -21,6 +21,12 @@ services:
       - "27017:27017"
     networks:
       - webnet
+    # volumes:
+    #   - "mongodata:/data/db"
+    deploy:
+      replicas: 3
+# volumes:
+#    mongodata:
 networks:
   webnet:
     name: webnet
