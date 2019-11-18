@@ -15,9 +15,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// MongoDB Config
-// var mongodb_server = "mongodb"
-
 // Local
 // var mongodb_server = "localhost:27017"
 // var mongodb_database = "top_domains"
@@ -36,13 +33,6 @@ var mongodb_collection = "top_domains"
 // Get TOP LIMIT of most popular hit websites
 // const Limit = 5
 var limit = 5
-
-// RabbitMQ Config
-// var rabbitmq_server = "rabbitmq"
-// var rabbitmq_port = "5672"
-// var rabbitmq_queue = "gumball"
-// var rabbitmq_user = "guest"
-// var rabbitmq_pass = "guest"
 
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
@@ -64,6 +54,10 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/top", topUrlHandler(formatter)).Methods("GET")
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 // Helper Functions
 func failOnError(err error, msg string) {
 	if err != nil {
@@ -75,6 +69,7 @@ func failOnError(err error, msg string) {
 // API Ping Handler
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		formatter.JSON(w, http.StatusOK, struct{ Test string }{"Top Domains API version 1.0 alive!"})
 	}
 }
@@ -82,6 +77,7 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 // API Update Old Domain or Create New Domain
 func urlHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		var inputUrl urlStruct
 		// var d domainMap
 		_ = json.NewDecoder(req.Body).Decode(&inputUrl)
@@ -147,6 +143,7 @@ func urlHandler(formatter *render.Render) http.HandlerFunc {
 // GET top LIMIT Url Handler
 func topUrlHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
 			panic(err)
@@ -168,6 +165,7 @@ func topUrlHandler(formatter *render.Render) http.HandlerFunc {
 // GET all objects from collection
 func domainHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
 			fmt.Println("Failed to establish connection to Mongo server:", err)
@@ -191,42 +189,3 @@ func domainHandler(formatter *render.Render) http.HandlerFunc {
 	}
 
 }
-
-/*
-
-  	-- Gumball MongoDB Collection (Create Document) --
-
-    db.gumball.insert(
-	    {
-	      Id: 1,
-	      CountGumballs: NumberInt(202),
-	      ModelNumber: 'M102988',
-	      SerialNumber: '1234998871109'
-	    }
-	) ;
-
-    -- Gumball MongoDB Collection - Find Gumball Document --
-
-    db.gumball.find( { Id: 1 } ) ;
-
-    {
-        "_id" : ObjectId("54741c01fa0bd1f1cdf71312"),
-        "Id" : 1,
-        "CountGumballs" : 202,
-        "ModelNumber" : "M102988",
-        "SerialNumber" : "1234998871109"
-    }
-
-    -- Gumball MongoDB Collection - Update Gumball Document --
-
-    db.gumball.update(
-        { Dd: 1 },
-        { $set : { CountGumballs : NumberInt(10) } },
-        { multi : false }
-    )
-
-    -- Gumball Delete Documents
-
-    db.gumball.remove({})
-
-*/
