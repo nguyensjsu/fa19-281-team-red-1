@@ -3,14 +3,17 @@ import { Component } from 'react';
 import LoginPage from './LoginPage/LoginPage'
 import SignupPage from './SignupPage/SignupPage'
 import { connect } from 'react-redux';
-import { LOGIN_PAGE } from '../../redux/actions'
+import { Switch, Route } from 'react-router-dom'
 
 class Authentication extends Component {
 
     render() {
         return (
             <React.Fragment>
-                {this.props.page === LOGIN_PAGE ? <LoginPage /> : <SignupPage />}
+                <Switch>
+                    <Route path='/login' component={LoginPage}></Route>
+                    <Route path='/signup' component={SignupPage}></Route>
+                </Switch>
             </React.Fragment>
         )
     }
