@@ -30,7 +30,7 @@ func main ()  {
 		logger.Println("[main] Health Check from Load Balancer")
 		return c.String(http.StatusOK, "Hello, Load Balancer!")
 	})
-	e.GET("/:key", redirect)
+	e.GET("/unshorten/:key", redirect)
 	e.POST("/shorten", shorten)
 	logger.Println(e.Start(":8080"))
 	db.Close()

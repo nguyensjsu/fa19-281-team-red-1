@@ -14,7 +14,7 @@ type MongoConfig struct {
 }
 
 var Config = Configuration {
-	BaseURL : "http://54.203.79.184:8080/",
+	BaseURL : "http://ec2-18-236-198-15.us-west-2.compute.amazonaws.com:8000/unshorten/",
 	Backend : "mongo",
 	Mongo : MongoConfig {
 		Host : "mongodb://admin:cmpe281@primary:27017,secondary1:27017,secondary2:27017/admin?replicaSet=cmpe281",
