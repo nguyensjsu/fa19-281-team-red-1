@@ -1,11 +1,15 @@
 import React from 'react';
 import { InputGroup, FormControl, Container, Button } from 'react-bootstrap';
+import axios from 'axios'
+import { hostname } from '../../../config'
+import cookie from 'react-cookies';
 
 class UrlShortener extends React.Component {
 
     state = {
-        url : "",
-        short_url: ""
+        url: "",
+        short_url: "",
+        message: ""
     }
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
@@ -15,6 +19,23 @@ class UrlShortener extends React.Component {
         console.log(this.state)
 
         // TODO: send request to backend
+        axios.post(hostname + '/shorten', {
+            url: this.state.url,
+            username: cookie.load("username")
+        }).then(res => {
+            if (res.status != 200) {
+                this.setState({
+                    ...this.state,
+                    message: res.data.message
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    message: "",
+                    short_url: res.data.ShortUrl
+                })
+            }
+        })
     }
 
     render() {
