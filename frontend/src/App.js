@@ -6,8 +6,9 @@ import {
   Link
 } from "react-router-dom";
 import { connect } from 'react-redux'
+import cookie from 'react-cookies'
 
-import MyNavbar from './components/MyNavbar/MyNavbar'
+import Main from './components/Main/Main'
 import Authentication from './components/Authentication/Authentication'
 
 class App extends React.Component {
@@ -15,19 +16,15 @@ class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          {
-            this.props.userAuth.userLoggedin ? <MyNavbar /> : <Authentication />
-          }
-          {/* <MyNavbar></MyNavbar>
-          <LoginPage></LoginPage>
-          <SignupPage></SignupPage> */}
+          <Switch>
+            <Route path={['/login', '/signup']} component={Authentication}></Route>
+            <Route path='/' component={Main}></Route>
+          </Switch>
         </div>
       </Router>
     )
   }
 }
-const mapStateToProps = state => ({
-  userAuth: state.userLoggedin
-})
 
-export default connect(mapStateToProps)(App);
+
+export default (App);

@@ -2,14 +2,14 @@ import React from 'react';
 import { Component } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { userLoginAction, switchPage, SIGNUP_PAGE } from '../../../redux/actions'
+import { userLoginAction, SIGNUP_PAGE } from '../../../redux/actions'
 
 import styles from '../Authentication.module.css';
 
 class LoginPage extends Component {
 
     onSignupClickHandler = () => {
-        this.props.switchPage(SIGNUP_PAGE)
+        // this.props.switchPage(SIGNUP_PAGE)
     }
 
     onLoginClickHandler = () => {
@@ -43,7 +43,6 @@ class LoginPage extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        switchPage: (page) => dispatch(switchPage(page)),
         login: (username) => dispatch(userLoginAction(username))
     };
 };
