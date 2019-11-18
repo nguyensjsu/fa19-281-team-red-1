@@ -24,7 +24,12 @@ import (
 // var mongodb_collection = "top_domains"
 
 // Docker-compose
-var mongodb_server = "mongodb:27017"
+// var mongodb_server = "mongodb:27017"
+// var mongodb_database = "top_domains"
+// var mongodb_collection = "top_domains"
+
+// AWS EC2 instance
+var mongodb_server = "mongodb://admin:test@10.0.1.87:27017"
 var mongodb_database = "top_domains"
 var mongodb_collection = "top_domains"
 
