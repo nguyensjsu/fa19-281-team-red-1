@@ -8,17 +8,7 @@ export const userLoginAction = (username) => (
     {
         type: USER_LOGGEDIN,
         payload: {
-            success: true,
             username
-        }
-    }
-)
-
-export const switchPage = (page) => (
-    {
-        type: SWITCH_PAGE,
-        payload: {
-            page: page
         }
     }
 )

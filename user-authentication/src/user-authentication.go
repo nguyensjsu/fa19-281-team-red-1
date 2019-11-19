@@ -63,11 +63,15 @@ func main() {
 	// log.Fatal(http.ListenAndServe(":8080", router))
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func initDB() *mgo.Collection {
 	// Local
 	// url := "localhost:27017"
 	// Docker-compose
-	url := "mongodb:27017"
+	url := "mongodb://admin:admin@primary:27017,secondary1:27017,secondary2:27017/admin?replicaSet=cmpe281"
 
 	database := "user_auth"
 	collection := "userinfo"
@@ -83,6 +87,7 @@ func initDB() *mgo.Collection {
 // Create history for a user
 func urlHandler(w http.ResponseWriter, req *http.Request) {
 	var request requestStruct
+	enableCors(&w)
 	_ = json.NewDecoder(req.Body).Decode(&request)
 	fmt.Println("URL in request: ", request.Url)
 	fmt.Println("Username in request: ", request.Username)
@@ -115,14 +120,14 @@ func urlHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func historyHandler(w http.ResponseWriter, req *http.Request) {
-
+	enableCors(&w)
 	username, ok := req.URL.Query()["Username"]
-    
-    if !ok || len(username[0]) < 1 {
+
+	if !ok || len(username[0]) < 1 {
 		formatter.JSON(w, http.StatusBadRequest, "Url Param 'Username' is missing")
-        return
+		return
 	}
-	
+
 	query := bson.M{"Username": username[0]}
 	var result userinfoDB
 	err := c.Find(query).One(&result)
@@ -135,6 +140,7 @@ func historyHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func signup(w http.ResponseWriter, req *http.Request) {
+	enableCors(&w)
 	log.Println("In signup")
 
 	reqBody, err := ioutil.ReadAll(req.Body)
@@ -166,6 +172,7 @@ func signup(w http.ResponseWriter, req *http.Request) {
 }
 
 func signin(w http.ResponseWriter, req *http.Request) {
+	enableCors(&w)
 	log.Println("In signin")
 
 	reqBody, err := ioutil.ReadAll(req.Body)
@@ -181,7 +188,7 @@ func signin(w http.ResponseWriter, req *http.Request) {
 	log.Println("Username: " + user.Username + " Password: " + user.Password)
 
 	var result userinfoDB
-	err = c.Find(bson.M{"username": user.Username}).One(&result)
+	err = c.Find(bson.M{"Username": user.Username}).One(&result)
 	if err != nil {
 		formatter.JSON(w, http.StatusBadRequest, "Signin Error: "+err.Error())
 		// w.WriteHeader(http.StatusBadRequest)
@@ -201,10 +208,12 @@ func signin(w http.ResponseWriter, req *http.Request) {
 }
 
 func root(w http.ResponseWriter, req *http.Request) {
+	enableCors(&w)
 	log.Println("In root")
 }
 
 func hello(w http.ResponseWriter, req *http.Request) {
+	enableCors(&w)
 	fmt.Fprintf(w, "hello\n")
 }
 
