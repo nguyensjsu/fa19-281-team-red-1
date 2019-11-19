@@ -71,7 +71,7 @@ func initDB() *mgo.Collection {
 	// Local
 	// url := "localhost:27017"
 	// Docker-compose
-	url := "mongodb://admin:*****@primary:27017,secondary1:27017,secondary2:27017/admin?replicaSet=cmpe281"
+	url := "mongodb://admin:admin@primary:27017,secondary1:27017,secondary2:27017/admin?replicaSet=cmpe281"
 
 	database := "user_auth"
 	collection := "userinfo"
@@ -188,7 +188,7 @@ func signin(w http.ResponseWriter, req *http.Request) {
 	log.Println("Username: " + user.Username + " Password: " + user.Password)
 
 	var result userinfoDB
-	err = c.Find(bson.M{"username": user.Username}).One(&result)
+	err = c.Find(bson.M{"Username": user.Username}).One(&result)
 	if err != nil {
 		formatter.JSON(w, http.StatusBadRequest, "Signin Error: "+err.Error())
 		// w.WriteHeader(http.StatusBadRequest)

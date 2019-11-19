@@ -3,7 +3,7 @@ FROM golang:latest
 # Wait for db connection
 RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /wait-for-it.sh && chmod +x /wait-for-it.sh
 
-EXPOSE 3000
+EXPOSE 8080
 RUN mkdir /app 
 # Set the Current Working Directory inside the container
 WORKDIR /app
