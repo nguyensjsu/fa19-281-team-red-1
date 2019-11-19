@@ -26,7 +26,7 @@ import (
 // var mongodb_collection = "top_domains"
 
 // AWS EC2 instance
-var mongodb_server = "mongodb://admin:test@10.0.1.87:27017"
+var mongodb_server = "mongodb://admin:test@primary:27017,secondary1:27017,secondary2:27017/admin?replicaSet=cmpe281"
 var mongodb_database = "top_domains"
 var mongodb_collection = "top_domains"
 
@@ -88,8 +88,9 @@ func urlHandler(formatter *render.Render) http.HandlerFunc {
 		}
 		// fmt.Println(u.Scheme)
 		// fmt.Println(u.Host)
-		components := strings.Split(u.Host, ".")
-		domain, _ := strings.ToLower(components[0]), components[1]
+		// components := strings.Split(u.Host, ".")
+		// domain, _ := strings.ToLower(components[0]), components[1]
+		domain := strings.ToLower(u.Host)
 		fmt.Println("Domain is ", domain)
 
 		session, err := mgo.Dial(mongodb_server)
