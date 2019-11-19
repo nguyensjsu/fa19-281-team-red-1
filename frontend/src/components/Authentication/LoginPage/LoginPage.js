@@ -4,11 +4,14 @@ import { Form, Button, Container } from 'react-bootstrap';
 
 import styles from '../Authentication.module.css';
 import cookie from 'react-cookies';
+import axios from 'axios';
+import { hostname } from '../../../config'
 
 class LoginPage extends Component {
     state = {
         username: "",
-        password: ""
+        password: "",
+        error: false
     }
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
@@ -24,8 +27,18 @@ class LoginPage extends Component {
         console.log("[Login Page] Current State")
         console.log(this.state)
 
-        cookie.save('username', 'test')
-        this.props.history.push('/')
+        axios.post(hostname + '/signin', {
+            username: this.state.username,
+            password: this.state.password
+        }).then(res => {
+            cookie.save('username', this.state.username)
+            this.props.history.push('/')
+        }).catch(err => {
+            this.setState({
+                ...this.state,
+                error: true
+            })
+        })
     }
 
     render() {
@@ -41,6 +54,7 @@ class LoginPage extends Component {
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.onChange} />
                     </Form.Group>
+                    {this.state.error ? <p style={{color:"red"}}>Failed</p> : null}
                     <Button variant="success" className={styles.button} onClick={this.onLoginClickHandler}>
                         Login
                     </Button>

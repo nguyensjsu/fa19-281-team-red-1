@@ -10,6 +10,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"golang.org/x/crypto/bcrypt"
@@ -57,7 +58,8 @@ func main() {
 	router.HandleFunc("/signin", signin).Methods("POST")
 	router.HandleFunc("/url", urlHandler).Methods("POST")
 	router.HandleFunc("/history", historyHandler).Methods("GET")
-	n.UseHandler(router)
+	handler := handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(router)
+	n.UseHandler(handler)
 	// http.ListenAndServe(":8080", n)
 	n.Run(":8080")
 	// log.Fatal(http.ListenAndServe(":8080", router))
@@ -155,10 +157,10 @@ func signup(w http.ResponseWriter, req *http.Request) {
 	json.Unmarshal(reqBody, &user)
 	log.Println("Username: " + user.Username + " Password: " + user.Password)
 
-	if len(user.Username) == 0 || len(user.Password) == 0 {
-		formatter.JSON(w, http.StatusBadRequest, "Signup Error: "+err.Error())
+	if &(user.Username) == nil || &(user.Password) == nil || len(user.Username) == 0 || len(user.Password) == 0 {
+		formatter.JSON(w, http.StatusBadRequest, "Signup Error: Empty Username or Password")
 		// w.WriteHeader(http.StatusBadRequest)
-
+		return
 		// fmt.Fprintf(w, "Signup Error")
 	}
 
