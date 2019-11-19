@@ -2,7 +2,11 @@ package main
 
 import (
 	"net/http"
+	"encoding/json"
+	"bytes"
+	"io/ioutil"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"crypto/rand"
 	"math/big"
 	"unicode"
@@ -21,6 +25,7 @@ var conf Configuration
 func main ()  {
 	conf = GetConfiguration()
 	e := echo.New()
+	e.Use(middleware.CORS())
 	s, err := NewStorage()
 	if err != nil {
 		logger.Println("Can NOT connect to DB")
@@ -45,6 +50,14 @@ func redirect(c echo.Context) error {
 		return c.String(404, "URL NOT FOUND")
 	}
 	logger.Println("[redirect] Origin URL: ", origin)
+	if err = touchTopService(origin); err != nil {
+		logger.Println("[redirect] touchTopService failed: ", err)
+		payload := &Payload {
+			ShortUrl: "",
+			Message: "Can NOT redirect shortened URL",
+		}
+		return c.JSON(500, payload)
+	}
 	return c.Redirect(http.StatusMovedPermanently, origin)
 }
 
@@ -69,6 +82,8 @@ func shorten(c echo.Context) error {
 		return err
 	}
 	originUrl := m["url"].(string)
+	user := m["Username"].(string)
+	logger.Println("[shorten] Receive request from User: ", user)
 	logger.Println("[shorten] Receive request for URL: ", originUrl)
 	var randomStr string = ""
 	var err error = nil
@@ -83,10 +98,19 @@ func shorten(c echo.Context) error {
 			err = nil
 			continue
 		}
-		break;
+		break
 	}
 	
 	if err != nil {
+		payload := &Payload {
+			ShortUrl: "",
+			Message: "Can NOT shorten the URL",
+		}
+		return c.JSON(500, payload)
+	}
+
+	if err = touchUserService(user, originUrl); err != nil {
+		logger.Println("[shorten] touchUserService failed: ", err)
 		payload := &Payload {
 			ShortUrl: "",
 			Message: "Can NOT shorten the URL",
@@ -102,4 +126,46 @@ func shorten(c echo.Context) error {
 		Message: "",
 	}
 	return c.JSON(200, payload)
+}
+
+func touchUserService(username string, originUrl string) error {
+	m := map[string]string{"Username" : username, "url" : originUrl}
+	jsonStr, _ := json.Marshal(m)
+    req, err := http.NewRequest("POST", conf.UserServiceURL, bytes.NewBuffer(jsonStr))
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+		logger.Println("[touchUserService] Response with error: ", err)
+		return err
+    }
+    defer resp.Body.Close()
+
+    logger.Println("[touchUserService] Response Status: ", resp.Status)
+    logger.Println("[touchUserService] Response Headers: ", resp.Header)
+    body, _ := ioutil.ReadAll(resp.Body)
+	logger.Println("touchUserService] Response Body: ", string(body))
+	return nil
+}
+
+func touchTopService(originUrl string) error {
+	m := map[string]string{"url" : originUrl}
+	jsonStr, _ := json.Marshal(m)
+    req, err := http.NewRequest("POST", conf.TopServiceURL, bytes.NewBuffer(jsonStr))
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+		logger.Println("[touchTopService] Response with error: ", err)
+		return err
+    }
+    defer resp.Body.Close()
+
+    logger.Println("[touchTopService] Response Status: ", resp.Status)
+    logger.Println("[touchTopService] Response Headers: ", resp.Header)
+    body, _ := ioutil.ReadAll(resp.Body)
+	logger.Println("touchTopService] Response Body: ", string(body))
+	return nil
 }
