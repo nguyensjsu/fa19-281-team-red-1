@@ -29,17 +29,12 @@ class SignupPage extends Component {
         console.log("[Signup Page] Current State")
         console.log(this.state)
 
-        let resolve = res => {
-            console.log(res)
-            if (res.status == 201) {
-                this.props.history.push('/login')
-            } else {
-                console.log("Signup Error: " + res.data)
-                this.setState({
-                    ...this.state,
-                    error: true
-                })
-            }
+        if (this.state.password !== this.state.confirmPassword) {
+            this.setState({
+                ...this.state,
+                error: true
+            })
+            return
         }
 
         axios.post(hostname + '/signup', {

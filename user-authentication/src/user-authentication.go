@@ -164,6 +164,15 @@ func signup(w http.ResponseWriter, req *http.Request) {
 		// fmt.Fprintf(w, "Signup Error")
 	}
 
+	query := bson.M{"Username": user.Username}
+	var result userinfoDB
+	err = c.Find(query).One(&result)
+
+	if err == nil {
+		formatter.JSON(w, http.StatusNotFound, "User Already Exists")
+		return
+	}
+
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 8)
 	userDB := userinfoDB{user.Username, hashedPassword, make([]string, 0)}
 	c.Insert(&userDB)
