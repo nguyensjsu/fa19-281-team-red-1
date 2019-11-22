@@ -1,15 +1,18 @@
 import React from 'react';
 import { Component } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
+import axios from 'axios';
+import { hostname } from '../../../config'
 
 import styles from '../Authentication.module.css';
 
 class SignupPage extends Component {
 
     state = {
-        username : "",
+        username: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        error: false
     }
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
@@ -26,7 +29,26 @@ class SignupPage extends Component {
         console.log("[Signup Page] Current State")
         console.log(this.state)
 
-        this.props.history.push('/login')
+        if (this.state.password !== this.state.confirmPassword) {
+            this.setState({
+                ...this.state,
+                error: true
+            })
+            return
+        }
+
+        axios.post(hostname + '/signup', {
+            username: this.state.username,
+            password: this.state.password
+        }).then(res => {
+            this.props.history.push('/login')
+        }).catch(err => {
+            this.setState({
+                ...this.state,
+                error: true
+            })
+        })
+
     }
 
     render() {
@@ -47,6 +69,7 @@ class SignupPage extends Component {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control type="password" placeholder="Confirm Password" name="confirmPassword" value={this.state.confirmPassword} onChange={this.onChange} />
                     </Form.Group>
+                    {this.state.error ? <p style={{ color: 'red' }}>Signup Failed</p> : null}
                     <Button variant="success" className={styles.button} onClick={this.onSignupClickHandler}>
                         Submit
                     </Button>

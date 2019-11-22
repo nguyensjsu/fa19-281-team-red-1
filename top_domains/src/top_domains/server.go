@@ -26,7 +26,7 @@ import (
 // var mongodb_collection = "top_domains"
 
 // AWS EC2 instance
-var mongodb_server = "mongodb://admin:test@10.0.1.87:27017"
+var mongodb_server = "mongodb://admin:test@primary:27017,secondary1:27017,secondary2:27017/admin?replicaSet=cmpe281"
 var mongodb_database = "top_domains"
 var mongodb_collection = "top_domains"
 
@@ -82,14 +82,28 @@ func urlHandler(formatter *render.Render) http.HandlerFunc {
 		// var d domainMap
 		_ = json.NewDecoder(req.Body).Decode(&inputUrl)
 		fmt.Println("URL in request: ", inputUrl.Url)
-		u, err := url.Parse(inputUrl.Url)
+		u, err := url.ParseRequestURI(inputUrl.Url)
+		if err != nil {
+			formatter.JSON(w, http.StatusBadRequest, "Url is not valid")
+			return
+		}
+		u, err = url.Parse(inputUrl.Url)
 		if err != nil {
 			panic(err)
 		}
 		// fmt.Println(u.Scheme)
 		// fmt.Println(u.Host)
-		components := strings.Split(u.Host, ".")
-		domain, _ := strings.ToLower(components[0]), components[1]
+		// components := strings.Split(u.Host, ".")
+		// domain, _ := strings.ToLower(components[0]), components[1]
+		domain := strings.ToLower(u.Hostname())
+		res := strings.Contains(domain, "www.")
+		if res {
+			domain = strings.Replace(domain, "www.", "", -1)
+		}
+		res = strings.Contains(domain, ".com")
+		if res {
+			domain = strings.Replace(domain, ".com", "", -1)
+		}
 		fmt.Println("Domain is ", domain)
 
 		session, err := mgo.Dial(mongodb_server)

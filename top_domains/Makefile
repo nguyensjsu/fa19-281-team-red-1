@@ -14,6 +14,9 @@ build:
 run: build
 	go run src/top_domains/*.go
 
+run-in-docker-host-ec2:
+	sudo docker run -td -p 3000:3000 --network=host --name topdomains kchuang7/topdomains:topdomains-v1.0
+
 run-binary:
 	bin/top_domains
 
