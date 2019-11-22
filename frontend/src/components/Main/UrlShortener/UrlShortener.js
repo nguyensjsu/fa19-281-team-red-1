@@ -18,24 +18,32 @@ class UrlShortener extends React.Component {
         console.log("[UrlShortener] Current State:")
         console.log(this.state)
 
+        if (this.state.url.trim() === "") {
+            this.setState({
+                ...this.state,
+                message: "Url cannot be empty"
+            })
+            return
+        }
+
         // TODO: send request to backend
         axios.post(hostname + '/shorten', {
             url: this.state.url,
-            username: cookie.load("username")
+            Username: cookie.load("username")
         }).then(res => {
-            if (res.status != 200) {
+            this.setState({
+                ...this.state,
+                message: "",
+                short_url: res.data.ShortUrl
+            })
+        },
+            err => {
                 this.setState({
                     ...this.state,
-                    message: res.data.message
-                })
-            } else {
-                this.setState({
-                    ...this.state,
-                    message: "",
-                    short_url: res.data.ShortUrl
+                    message: err.response.data
                 })
             }
-        })
+        )
     }
 
     render() {
@@ -71,6 +79,7 @@ class UrlShortener extends React.Component {
                             onChange={this.onChange}
                         />
                     </InputGroup>
+                    <p style={{ color: "red" }}>{this.state.message}</p>
                     <Button onClick={this.onGenerateClickHandler}>Generate</Button>
                 </Container>
             </React.Fragment>
