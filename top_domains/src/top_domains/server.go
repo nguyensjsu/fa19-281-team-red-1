@@ -82,7 +82,12 @@ func urlHandler(formatter *render.Render) http.HandlerFunc {
 		// var d domainMap
 		_ = json.NewDecoder(req.Body).Decode(&inputUrl)
 		fmt.Println("URL in request: ", inputUrl.Url)
-		u, err := url.Parse(inputUrl.Url)
+		u, err := url.ParseRequestURI(inputUrl.Url)
+		if err != nil {
+			formatter.JSON(w, http.StatusBadRequest, "Url is not valid")
+			return
+		}
+		u, err = url.Parse(inputUrl.Url)
 		if err != nil {
 			panic(err)
 		}
