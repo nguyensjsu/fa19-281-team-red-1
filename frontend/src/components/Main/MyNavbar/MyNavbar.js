@@ -30,7 +30,7 @@ class MyNavbar extends Component {
                             <Nav.Link>History</Nav.Link>
                         </LinkContainer>
                         <LinkContainer to="/top">
-                            <Nav.Link>Top 10</Nav.Link>
+                            <Nav.Link>Top 5</Nav.Link>
                         </LinkContainer>
                     </Nav>
                     <Nav className="ml-auto">

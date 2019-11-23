@@ -3,7 +3,7 @@ import MyNavbar from './MyNavbar/MyNavbar'
 import cookie from 'react-cookies'
 import { Redirect, Switch, Route } from 'react-router-dom';
 import UrlShortener from './UrlShortener/UrlShortener'
-import TopTen from './TopTen/TopTen'
+import TopFive from './TopFive/TopFive'
 import History from './History/History'
 
 class Main extends React.Component {
@@ -17,7 +17,7 @@ class Main extends React.Component {
                 <Switch>
                     <Route path="/" exact component={UrlShortener}></Route>
                     <Route path="/history" exact component={History}></Route>
-                    <Route path="/top" exact component={TopTen}></Route>
+                    <Route path="/top" exact component={TopFive}></Route>
                 </Switch>
             </React.Fragment>
         )
